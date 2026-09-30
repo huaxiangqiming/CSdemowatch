@@ -1,0 +1,9 @@
+{
+  "repository": "https://gitlab.com/markus-wa/cs-demos-2",
+  "revision": "df52577f7d01d9dd2172dee6fad48c6d9ced4b22",
+  "archive_file": "s2.7z",
+  "archive_sha256": "af8227b333cdd881dc9ad49d19d936de04789069ef49b736cd3bf3e6bb37dd43",
+  "demo_file": "s2/s2.dem",
+  "demo_sha256": "9051f4690a8a2f1a0d54026685e5f83f1a2aab04574a1cb8735b7413712319a2",
+  "parser_library": "github.com/markus-wa/demoinfocs-golang/v5@v5.2.0"
+}

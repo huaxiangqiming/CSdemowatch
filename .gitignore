@@ -1,0 +1,45 @@
+app/.godot/
+.tools/
+artifacts/
+*.tmp
+test_data/**/*.dem
+test_data/**/*.7z
+test_data/**/*.zip
+test_data/**/*.replay.json
+parser/bin/
+app/maps/**/*.glb
+app/maps/**/*.glb.import
+
+dist/
+
+# Local game resources, replay data and generated map metadata
+*.dem
+*.replay
+*.replay.json
+*.vpk
+*.glb
+*.glb.import
+*.zip
+*.7z
+app/maps/**/source.json
+app/maps/**/map.build.json
+app/maps/**/cache.json
+app/maps/**/map.glb.*
+
+# Original local planning documents; PROJECT_SPEC.md is the portable source
+/*.docx
+
+# Credentials, machine settings and runtime logs
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.pfx
+*.p12
+*.log
+.DS_Store
+Thumbs.db
+
+# Synthetic replay format example
+!shared/replay-format/example.replay.json

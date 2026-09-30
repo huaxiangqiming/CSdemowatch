@@ -1,0 +1,640 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CS2 Tactical Replay Format V2",
+  "type": "object",
+  "required": [
+    "version",
+    "metadata",
+    "players",
+    "tracks",
+    "events",
+    "projectiles"
+  ],
+  "properties": {
+    "version": {
+      "const": 2
+    },
+    "metadata": {
+      "type": "object",
+      "required": [
+        "map",
+        "duration",
+        "source_tick_rate",
+        "sample_rate",
+        "coordinate_system",
+        "source_start_tick",
+        "source_end_tick"
+      ],
+      "properties": {
+        "map": {
+          "type": "string",
+          "minLength": 1
+        },
+        "duration": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "source_tick_rate": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "sample_rate": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "coordinate_system": {
+          "const": "cs2_raw"
+        },
+        "source_start_tick": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "source_end_tick": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "players": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "steam_id",
+          "name",
+          "team"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "steam_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "team": {
+            "enum": [
+              "T",
+              "CT"
+            ]
+          }
+        }
+      }
+    },
+    "tracks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "player_id",
+          "frames"
+        ],
+        "properties": {
+          "player_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "frames": {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "type": "object",
+              "required": [
+                "time",
+                "tick",
+                "position",
+                "yaw",
+                "health",
+                "alive",
+                "team",
+                "available"
+              ],
+              "properties": {
+                "time": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "tick": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "position": {
+                  "type": "object",
+                  "required": [
+                    "x",
+                    "y",
+                    "z"
+                  ],
+                  "properties": {
+                    "x": {
+                      "type": "number"
+                    },
+                    "y": {
+                      "type": "number"
+                    },
+                    "z": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "yaw": {
+                  "type": "number"
+                },
+                "health": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "alive": {
+                  "type": "boolean"
+                },
+                "team": {
+                  "enum": [
+                    "T",
+                    "CT"
+                  ]
+                },
+                "available": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "time",
+          "tick",
+          "actor_player_id",
+          "actor_team"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "type": {
+            "enum": [
+              "smoke",
+              "fire",
+              "he",
+              "flash",
+              "shot",
+              "kill",
+              "bomb_pickup",
+              "bomb_drop",
+              "bomb_plant",
+              "bomb_defuse",
+              "bomb_explode",
+              "bomb_reset",
+              "player_hurt"
+            ]
+          },
+          "actor_player_id": {
+            "type": "string"
+          },
+          "actor_team": {
+            "enum": [
+              "T",
+              "CT",
+              "UNKNOWN"
+            ]
+          },
+          "time": {
+            "type": "number",
+            "minimum": 0
+          },
+          "tick": {
+            "type": "integer"
+          },
+          "position": {
+            "type": "object",
+            "required": [
+              "x",
+              "y",
+              "z"
+            ],
+            "properties": {
+              "x": {
+                "type": "number"
+              },
+              "y": {
+                "type": "number"
+              },
+              "z": {
+                "type": "number"
+              }
+            }
+          },
+          "origin": {
+            "type": "object",
+            "required": [
+              "x",
+              "y",
+              "z"
+            ],
+            "properties": {
+              "x": {
+                "type": "number"
+              },
+              "y": {
+                "type": "number"
+              },
+              "z": {
+                "type": "number"
+              }
+            }
+          },
+          "direction": {
+            "type": "object",
+            "required": [
+              "x",
+              "y",
+              "z"
+            ],
+            "properties": {
+              "x": {
+                "type": "number"
+              },
+              "y": {
+                "type": "number"
+              },
+              "z": {
+                "type": "number"
+              }
+            }
+          },
+          "impact": {
+            "type": "object",
+            "required": [
+              "x",
+              "y",
+              "z"
+            ],
+            "properties": {
+              "x": {
+                "type": "number"
+              },
+              "y": {
+                "type": "number"
+              },
+              "z": {
+                "type": "number"
+              }
+            }
+          },
+          "projectile_id": {
+            "type": "string"
+          },
+          "grenade_type": {
+            "enum": [
+              "smoke",
+              "fire",
+              "molotov",
+              "incendiary",
+              "he",
+              "flash",
+              "unknown_fire"
+            ]
+          },
+          "throw_time": {
+            "type": "number",
+            "minimum": 0
+          },
+          "activate_time": {
+            "type": "number",
+            "minimum": 0
+          },
+          "expire_time": {
+            "type": "number",
+            "minimum": 0
+          },
+          "end_reason": {
+            "type": "string"
+          },
+          "direction_source": {
+            "type": "string"
+          },
+          "victim_player_id": {
+            "type": "string"
+          },
+          "victim_team": {
+            "enum": [
+              "T",
+              "CT",
+              "UNKNOWN"
+            ]
+          },
+          "assister_player_id": {
+            "type": "string"
+          },
+          "weapon": {
+            "type": "string"
+          },
+          "headshot": {
+            "type": "boolean"
+          },
+          "patches": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "position",
+                "activate_time",
+                "expire_time"
+              ],
+              "properties": {
+                "position": {
+                  "type": "object",
+                  "required": [
+                    "x",
+                    "y",
+                    "z"
+                  ],
+                  "properties": {
+                    "x": {
+                      "type": "number"
+                    },
+                    "y": {
+                      "type": "number"
+                    },
+                    "z": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "activate_time": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "expire_time": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              }
+            }
+          },
+          "affected_players": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "player_id",
+                "flash_duration"
+              ],
+              "properties": {
+                "player_id": {
+                  "type": "string"
+                },
+                "flash_duration": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "flash_amount": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              }
+            }
+          },
+          "position_frames": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "time",
+                "tick",
+                "position"
+              ],
+              "properties": {
+                "time": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "tick": {
+                  "type": "integer"
+                },
+                "position": {
+                  "type": "object",
+                  "required": [
+                    "x",
+                    "y",
+                    "z"
+                  ],
+                  "properties": {
+                    "x": {
+                      "type": "number"
+                    },
+                    "y": {
+                      "type": "number"
+                    },
+                    "z": {
+                      "type": "number"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "damage": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "health_remaining": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "damage_source": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "smoke",
+                    "fire",
+                    "he",
+                    "flash"
+                  ]
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "position",
+                "throw_time",
+                "activate_time",
+                "expire_time"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "shot"
+                  ]
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "origin",
+                "direction"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "kill"
+                  ]
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "victim_player_id",
+                "victim_team",
+                "weapon",
+                "headshot"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "type": {
+                  "const": "player_hurt"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "victim_player_id",
+                "victim_team",
+                "damage",
+                "health_remaining",
+                "damage_source"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "projectiles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "actor_player_id",
+          "actor_team",
+          "throw_time",
+          "end_time",
+          "end_reason",
+          "frames"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "type": {
+            "enum": [
+              "smoke",
+              "molotov",
+              "incendiary",
+              "he",
+              "flash"
+            ]
+          },
+          "actor_player_id": {
+            "type": "string"
+          },
+          "actor_team": {
+            "enum": [
+              "T",
+              "CT",
+              "UNKNOWN"
+            ]
+          },
+          "throw_time": {
+            "type": "number",
+            "minimum": 0
+          },
+          "end_time": {
+            "type": "number",
+            "minimum": 0
+          },
+          "end_reason": {
+            "type": "string"
+          },
+          "frames": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": [
+                "time",
+                "tick",
+                "position"
+              ],
+              "properties": {
+                "time": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "tick": {
+                  "type": "integer"
+                },
+                "position": {
+                  "type": "object",
+                  "required": [
+                    "x",
+                    "y",
+                    "z"
+                  ],
+                  "properties": {
+                    "x": {
+                      "type": "number"
+                    },
+                    "y": {
+                      "type": "number"
+                    },
+                    "z": {
+                      "type": "number"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "description": "Structural validation. Runtime validators additionally enforce unique IDs, references, ordering, finite coordinates, normalized directions and time/tick/interval consistency."
+}

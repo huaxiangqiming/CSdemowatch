@@ -1,0 +1,18 @@
+{
+  "archive": "https://pub-df0163da89b24187b28fd37c8dc7c8a1.r2.dev/demofile-net-demos-9.zip",
+  "samples": [
+    {
+      "file": "inferno-short.dem",
+      "entry": "14034.dem",
+      "bytes": 662950,
+      "sha256": "8cd36f20431f95f32c065cdfeee97f813e30fdf019886b43d8c21fe67082b7c7"
+    },
+    {
+      "file": "inferno-spawn.dem",
+      "entry": "13978.dem",
+      "bytes": 288904,
+      "sha256": "c163f73de44cc3a58649e841d5fd1bd2982d94fa71b86f1052fd1bebc646ec7e"
+    }
+  ],
+  "pov_rejected": "source tick rewound from 467934 to 0; existing Parser policy unchanged"
+}

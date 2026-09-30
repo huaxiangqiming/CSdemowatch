@@ -1,0 +1,171 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CS2 Tactical Replay Format V1",
+  "type": "object",
+  "required": [
+    "version",
+    "metadata",
+    "players",
+    "tracks"
+  ],
+  "properties": {
+    "version": {
+      "const": 1
+    },
+    "metadata": {
+      "type": "object",
+      "required": [
+        "map",
+        "duration",
+        "source_tick_rate",
+        "sample_rate",
+        "coordinate_system",
+        "source_start_tick",
+        "source_end_tick"
+      ],
+      "properties": {
+        "map": {
+          "type": "string",
+          "minLength": 1
+        },
+        "duration": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "source_tick_rate": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "sample_rate": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "coordinate_system": {
+          "const": "cs2_raw"
+        },
+        "source_start_tick": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "source_end_tick": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "players": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "steam_id",
+          "name",
+          "team"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "steam_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "team": {
+            "enum": [
+              "T",
+              "CT"
+            ]
+          }
+        }
+      }
+    },
+    "tracks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "player_id",
+          "frames"
+        ],
+        "properties": {
+          "player_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "frames": {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "type": "object",
+              "required": [
+                "time",
+                "tick",
+                "position",
+                "yaw",
+                "health",
+                "alive",
+                "team",
+                "available"
+              ],
+              "properties": {
+                "time": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "tick": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "position": {
+                  "type": "object",
+                  "required": [
+                    "x",
+                    "y",
+                    "z"
+                  ],
+                  "properties": {
+                    "x": {
+                      "type": "number"
+                    },
+                    "y": {
+                      "type": "number"
+                    },
+                    "z": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "yaw": {
+                  "type": "number"
+                },
+                "health": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "alive": {
+                  "type": "boolean"
+                },
+                "team": {
+                  "enum": [
+                    "T",
+                    "CT"
+                  ]
+                },
+                "available": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

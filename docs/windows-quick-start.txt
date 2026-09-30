@@ -1,0 +1,41 @@
+CS2 Tactical Replay — v0.8.1-dev
+
+1. Keep this entire folder: EXE, PCK, cs2parser.exe, cs2maptool.exe and map-tools
+   (Source2Viewer CLI, its DLLs and MIT license).
+2. Double-click CS2TacticalReplay.exe. No Godot, Go, Python or VRF install is needed.
+3. Choose Open Demo or drop one .dem file into Home. Processing stays local.
+4. Missing/stale maps use Debug Plane immediately after Replay loading.
+   New settings default to Auto: discover CS2, prepare the map in the background,
+   then load it automatically. Old Ask/Never preferences are preserved.
+5. Use Play/Pause, Timeline and 0.5x/1x/2x. Wheel zooms; right-drag pans.
+   Map hot swap preserves time, speed, camera, selection and layers.
+   View > Height cutaway defaults on for real replays. It hides geometry above
+   the highest living-player track plus headroom. Lower the slider to inspect
+   lower floors, or turn it off to restore the complete prepared map.
+   Cutaway affects map rendering only; players and combat effects are unchanged.
+6. Settings > MAPS: browse CS2, select Auto/Ask/Never, Prepare, Rebuild,
+   Delete Cache or View Log. Ask uses Prepare then Load Map in the View tab.
+   Each app instance prepares at most one map at a time.
+7. No CS2 or failed conversion never blocks a successfully parsed Replay.
+   Set the installation path and Retry/Prepare without reparsing the Demo.
+8. Home returns to Recent Replays, showing Map Ready or Map Missing.
+9. View > Debug / Player Status shows source/cache/preparation, geometry and
+   player diagnostics. Normal playback UI hides developer paths.
+
+Cache/settings/recent/logs: %LOCALAPPDATA%/CS2TacticalReplay/
+Maps and Replay caches are independent; another Demo on the same map reuses it.
+Source file and converter/classifier version changes invalidate generic maps.
+The package contains no Valve mesh. Preparation reads local CS2 resources only.
+
+Verified preparation/playback: Ancient, Mirage, Dust2, Vertigo, Inferno.
+Inferno alignment uses two short real public clips, not a full match.
+Nuke is unverified. Other maps may prepare automatically or use Plane.
+Geometry is gray collision data, without original materials or lighting.
+Conservative roof classification protects walkable floors and keeps unknown faces.
+Some small/sloped roofs and upper floors still obscure lower areas; transparency
+can help. Inferno has 2.67M triangles and exceeds the target complexity budget.
+Large JSON Replays take seconds to load. Cancel waits for the current tool.
+No installer, account, cloud, streaming or advanced tactical analysis is included.
+
+Full scope, measurements, screenshots and known issues: docs/milestone-8.md
+in the source project.

@@ -1,0 +1,53 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://scripts/Main.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/core/ReplayController.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/camera/TacticalCamera.gd" id="3"]
+[ext_resource type="Script" path="res://scripts/ui/TimelineUI.gd" id="4"]
+[ext_resource type="Script" path="res://scripts/world/TestGrid.gd" id="5"]
+[sub_resource type="StandardMaterial3D" id="GroundMaterial"]
+albedo_color = Color(0.17, 0.21, 0.25, 1)
+roughness = 1.0
+[sub_resource type="PlaneMesh" id="GroundMesh"]
+size = Vector2(32, 32)
+[sub_resource type="Environment" id="Environment"]
+background_mode = 1
+background_color = Color(0.055, 0.071, 0.094, 1)
+ambient_light_source = 3
+ambient_light_color = Color(0.75, 0.82, 0.92, 1)
+ambient_light_energy = 0.65
+tonemap_mode = 0
+[node name="Main" type="Node3D"]
+script = ExtResource("1")
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment")
+[node name="Sun" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-58, -30, 0)
+light_energy = 1.1
+shadow_enabled = false
+[node name="TestPlane" type="MeshInstance3D" parent="."]
+mesh = SubResource("GroundMesh")
+material_override = SubResource("GroundMaterial")
+[node name="Grid" type="MeshInstance3D" parent="TestPlane"]
+script = ExtResource("5")
+[node name="ReplayController" type="Node3D" parent="."]
+script = ExtResource("2")
+[node name="TacticalCamera" type="Node3D" parent="."]
+script = ExtResource("3")
+[node name="Pivot" type="Node3D" parent="TacticalCamera"]
+[node name="Camera3D" type="Camera3D" parent="TacticalCamera/Pivot"]
+projection = 1
+size = 46.0
+near = 0.1
+far = 400.0
+current = true
+[node name="UI" type="CanvasLayer" parent="."]
+[node name="TimelineUI" type="Control" parent="UI"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("4")

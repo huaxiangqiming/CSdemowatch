@@ -1,0 +1,18 @@
+[
+  {"map":"de_ancient","verified":true,"status":"Verified"},
+  {"map":"de_mirage","verified":true,"status":"Verified"},
+  {"map":"de_dust2","verified":true,"status":"Verified"},
+  {"map":"de_vertigo","verified":true,"status":"Verified"},
+  {"map":"de_inferno","verified":false,"status":"Experimental - short Demo samples"},
+  {"map":"de_nuke","verified":false,"status":"Experimental - geometry checked"},
+  {"map":"de_train","verified":false,"status":"Experimental - geometry checked"},
+  {"map":"de_overpass","verified":false,"status":"Experimental - geometry checked"},
+  {"map":"de_anubis","verified":false,"status":"Experimental - geometry checked"},
+  {"map":"de_cache","verified":false,"status":"Experimental - geometry checked"},
+  {"map":"de_ancient_night","verified":false,"status":"Experimental - geometry checked"},
+  {"map":"de_boulder","verified":false,"status":"Experimental - heavy geometry"},
+  {"map":"de_debris","verified":false,"status":"Experimental - geometry checked"},
+  {"map":"de_eldorado","verified":false,"status":"Experimental - geometry checked"},
+  {"map":"de_fachwerk","verified":false,"status":"Experimental - heavy geometry"},
+  {"map":"de_poseidon","verified":false,"status":"Experimental - geometry checked"}
+]

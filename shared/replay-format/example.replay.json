@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "metadata": {
+    "map": "test_plane",
+    "duration": 0.0625,
+    "source_tick_rate": 64,
+    "sample_rate": 16,
+    "coordinate_system": "cs2_raw",
+    "source_start_tick": 100,
+    "source_end_tick": 104
+  },
+  "players": [
+    {
+      "id": "example",
+      "steam_id": "",
+      "name": "Example",
+      "team": "T"
+    }
+  ],
+  "tracks": [
+    {
+      "player_id": "example",
+      "frames": [
+        {
+          "time": 0,
+          "tick": 100,
+          "position": {
+            "x": 100,
+            "y": 200,
+            "z": 30
+          },
+          "yaw": 90,
+          "health": 100,
+          "alive": true,
+          "team": "T",
+          "available": true
+        },
+        {
+          "time": 0.0625,
+          "tick": 104,
+          "position": {
+            "x": 104,
+            "y": 200,
+            "z": 30
+          },
+          "yaw": 90,
+          "health": 100,
+          "alive": true,
+          "team": "T",
+          "available": true
+        }
+      ]
+    }
+  ]
+}

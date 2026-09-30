@@ -1,0 +1,8 @@
+{
+  "map": "de_ancient",
+  "model_path": "map.glb",
+  "scale": 0.01,
+  "rotation": 0.0,
+  "offset": [0, 0, 0],
+  "model_coordinates": "Normalized Y-up Source units: X, Z, -Y"
+}

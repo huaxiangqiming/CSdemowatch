@@ -1,0 +1,12 @@
+{
+  "repository": "https://github.com/LaihoE/demoparser",
+  "source_path": "src/parser/test_demo.dem",
+  "download_url": "https://raw.githubusercontent.com/LaihoE/demoparser/main/src/parser/test_demo.dem",
+  "demo_sha256": "84a1a4191302bdd2a3bbb5a727842093744b1fb1a228aeec630369e44b622cb2",
+  "demo_bytes": 60601900,
+  "map": "de_mirage",
+  "player_hurt": 264,
+  "hegrenade_hurt": 15,
+  "inferno_hurt": 38,
+  "note": "Local public regression sample. Never included in Windows distribution."
+}
