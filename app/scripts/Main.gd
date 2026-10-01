@@ -21,10 +21,12 @@ var replay_loading_ms := 0
 var _activity := 0.0
 
 func _ready() -> void:
+	$WorldEnvironment.environment = $WorldEnvironment.environment.duplicate()
 	get_window().theme = preload("res://scripts/application/ShellStyle.gd").theme()
 	controller.replay_failed.connect(func(message): timeline.show_error(message))
 	map_manager = preload("res://scripts/map/MapManager.gd").new()
 	map_manager.name = "MapManager"
+	apply_scene_palette(0)
 	add_child(map_manager)
 	add_child(preload("res://scripts/world/WorldAxes.gd").new())
 	debug_overlay = preload("res://scripts/ui/DebugOverlay.gd").new()
@@ -78,6 +80,10 @@ func _ready() -> void:
 	for control in $UI.get_children():
 		if control is Control: control.theme = ui_theme
 
+func apply_scene_palette(index: int) -> void:
+	$WorldEnvironment.environment.background_color = preload("res://scripts/config/ScenePalette.gd").preset(index).background
+	map_manager.set_palette(index)
+
 func open_replay(path: String) -> bool:
 	controller.clock.pause()
 	var started := Time.get_ticks_msec()
@@ -90,6 +96,7 @@ func open_replay(path: String) -> bool:
 
 func _finish_scene(path: String, started: int) -> void:
 	timeline.bind_clock(controller.clock)
+	timeline.bind_rounds(controller.replay.events)
 	timeline.describe_replay(controller.replay.metadata, path.get_file())
 	debug_overlay.bind_controller(controller)
 	map_manager.configure(controller.replay.metadata.map, controller.replay, $TestPlane)

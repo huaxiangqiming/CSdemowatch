@@ -11,7 +11,7 @@ The installer supports English / Simplified Chinese and installs for the current
 This beta is unsigned; Windows may show an unverified publisher prompt.
 Verify SHA256SUMS.txt from the release. Uninstall preserves user settings and caches.
 
-CS2 Tactical Replay — v0.9.1-beta.1
+CS2 Tactical Replay — v0.9.2-beta.1
 
 1. Keep this entire folder: EXE, PCK, cs2parser.exe, cs2maptool.exe and map-tools
    (Source2Viewer CLI, its DLLs and MIT license).
@@ -56,5 +56,11 @@ in the source project.
 New Demo caches use indexed .replay files. Older JSON caches remain readable.
 Player tracks load on demand; events and projectiles currently remain resident.
 
-Appearance: Settings > Scene Background selects light blue gray, soft gray or dark slate.
+Appearance: Settings > Map & Background selects coordinated Stone, Mist or Slate palettes.
 The Panels button hides the side tools for an unobstructed map view.
+
+Playback navigation: 上一回合 / 下一回合 jump to recorded round starts.
+−15 秒 / +15 秒 skip exactly 15 replay seconds and clamp at the ends.
+Playback speed and paused/playing state are preserved, except reaching the end pauses.
+Round numbers count recorded starts, including restarts; they are not the match score.
+Replays without recorded starts keep the 15-second controls; round buttons are disabled.

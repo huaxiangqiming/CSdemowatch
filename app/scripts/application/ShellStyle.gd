@@ -1,6 +1,6 @@
 extends RefCounted
-const BACKGROUND := Color("edf2f7")
-const PANEL := Color("ffffff")
+const BACKGROUND := Color("e7ebe7")
+const PANEL := Color("f3f5f2")
 const INK := Color("23364a")
 const MUTED := Color("52677c")
 const ACCENT := Color("087e8b")
@@ -24,7 +24,7 @@ static func theme() -> Theme:
 		t.set_color("font_disabled_color", kind, Color("748496"))
 	for kind in ["Button", "OptionButton"]:
 		for state in ["normal", "hover", "pressed", "disabled"]:
-			var fill: Color = {"normal":Color("e8eff6"),"hover":Color("d5e6ef"),"pressed":Color("b8dfe3"),"disabled":Color("f0f3f7")}[state]
+			var fill: Color = {"normal":Color("e3e9e7"),"hover":Color("d5e2de"),"pressed":Color("b8dfe3"),"disabled":Color("f0f3f7")}[state]
 			t.set_stylebox(state, kind, box(fill, 10))
 		var focus := box(Color(0,0,0,0), 10)
 		focus.border_color = ACCENT; focus.set_border_width_all(2)
@@ -34,12 +34,12 @@ static func theme() -> Theme:
 			var fill := Color("e5f2f4") if state in ["pressed", "hover_pressed"] else Color(0,0,0,0)
 			t.set_stylebox(state,kind,box(fill,4,4))
 	for kind in ["LineEdit", "TextEdit"]:
-		t.set_stylebox("normal",kind,box(Color("e8eff6"),10))
+		t.set_stylebox("normal",kind,box(Color("e3e9e7"),10))
 		t.set_color("caret_color",kind,INK)
 		t.set_color("font_placeholder_color",kind,MUTED)
 		t.set_color("selection_color",kind,Color("b8dfe3"))
 	t.set_stylebox("panel","PopupMenu",box(PANEL,8))
-	t.set_stylebox("hover","PopupMenu",box(Color("d5e6ef"),6))
+	t.set_stylebox("hover","PopupMenu",box(Color("d5e2de"),6))
 	t.set_stylebox("panel","TabContainer",box(PANEL,10))
 	for kind in ["TabContainer", "TabBar"]:
 		t.set_stylebox("tab_selected",kind,box(PANEL,12))

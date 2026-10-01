@@ -15,6 +15,14 @@ var _dragging := false
 var _resume_after_drag := false
 var subtitle: Label
 var tick_labels: Array[Label] = []
+var previous_round_button: Button
+var next_round_button: Button
+var back_15_button: Button
+var forward_15_button: Button
+var round_label: Label
+var round_navigation = preload("res://scripts/core/RoundNavigation.gd").new()
+var _enabled := false
+
 
 
 func _ready() -> void:
@@ -27,6 +35,7 @@ func bind_clock(value: RefCounted) -> void:
 		clock.time_changed.disconnect(_on_time_changed)
 		clock.state_changed.disconnect(_refresh_state)
 	clock = value
+	round_navigation.build([], clock.duration)
 	_dragging = false
 	_resume_after_drag = false
 	error_label.hide()
@@ -38,6 +47,34 @@ func bind_clock(value: RefCounted) -> void:
 	_refresh_state()
 	for i in tick_labels.size():
 		tick_labels[i].text = _format_time(clock.duration * i / 4.0).split(".")[0]
+
+func bind_rounds(events: Array) -> void:
+	round_navigation.build(events, clock.duration)
+	_refresh_navigation()
+
+func jump_round(direction: int) -> void:
+	if not _enabled or _dragging or clock == null: return
+	var target: float = round_navigation.target(clock.current_time, direction)
+	if target >= 0: clock.seek(target)
+
+func skip_seconds(amount: float) -> void:
+	if _enabled and not _dragging and clock != null:
+		clock.seek(clock.current_time + amount)
+
+func _refresh_navigation() -> void:
+	if clock == null: return
+	var blocked := not _enabled or _dragging
+	previous_round_button.disabled = blocked or round_navigation.target(clock.current_time, -1) < 0
+	next_round_button.disabled = blocked or round_navigation.target(clock.current_time, 1) < 0
+	back_15_button.disabled = blocked or clock.current_time <= 0
+	forward_15_button.disabled = blocked or clock.current_time >= clock.duration
+	if round_navigation.starts.is_empty():
+		round_label.text = "无回合记录"
+		round_label.tooltip_text = "该回放没有记录回合起点；仍可使用 ±15 秒和时间轴。"
+	else:
+		var index: int = round_navigation.current_index(clock.current_time)
+		round_label.text = "回合记录 %d / %d" % [index + 1, round_navigation.starts.size()] if index >= 0 else "首个回合之前"
+		round_label.tooltip_text = "按 Demo 记录的回合起点导航，包含记录到的重开；序号不代表比赛比分。"
 
 func describe_replay(metadata: Dictionary, filename: String) -> void:
 	subtitle.text = "%s  /  %s  /  Debug plane" % [filename, metadata.map]
@@ -51,6 +88,9 @@ func show_error(message: String) -> void:
 
 
 func _set_enabled(enabled: bool) -> void:
+	_enabled = enabled
+	for button in [previous_round_button, next_round_button, back_15_button, forward_15_button]:
+		button.disabled = not enabled
 	slider.editable = enabled
 	for button in [play_button, pause_button, rewind_button] + speed_buttons:
 		button.disabled = not enabled
@@ -60,9 +100,14 @@ func _on_time_changed(seconds: float) -> void:
 	# Clock updates must not emit value_changed and recursively seek.
 	slider.set_value_no_signal(seconds)
 	time_label.text = "%s  /  %s" % [_format_time(seconds), _format_time(clock.duration)]
+	_refresh_navigation()
 
 
 func _refresh_state() -> void:
+	if not _enabled:
+		_refresh_navigation()
+		return
+	_refresh_navigation()
 	play_button.disabled = clock.is_playing or _dragging
 	pause_button.disabled = not clock.is_playing or _dragging
 	play_button.text = "Replay" if clock.current_time >= clock.duration else "Play"
@@ -89,7 +134,7 @@ func _on_drag_ended(_value_changed: bool) -> void:
 	if clock == null:
 		return
 	_dragging = false
-	if _resume_after_drag and clock.current_time < clock.duration:
+	if _resume_after_drag and _enabled and clock.current_time < clock.duration:
 		clock.play()
 	_resume_after_drag = false
 	_refresh_state()
@@ -103,7 +148,7 @@ func _notification(what: int) -> void:
 
 
 func _unhandled_key_input(event: InputEvent) -> void:
-	if clock != null and event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_SPACE:
+	if _enabled and clock != null and event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_SPACE:
 		if not _dragging:
 			if clock.is_playing:
 				clock.pause()
@@ -124,7 +169,7 @@ func _build_ui() -> void:
 	add_child(header)
 	header.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
 	header.offset_bottom = 92
-	header.add_theme_stylebox_override("panel", _box(Color("ffffff"), 0, 24, 14))
+	header.add_theme_stylebox_override("panel", _box(Color("f3f5f2"), 0, 24, 14))
 	var header_row := HBoxContainer.new()
 	header.add_child(header_row)
 	var heading := VBoxContainer.new()
@@ -141,12 +186,12 @@ func _build_ui() -> void:
 	add_child(footer)
 	footer.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
 	footer.offset_top = -166
-	footer.add_theme_stylebox_override("panel", _box(Color("ffffff"), 0, 24, 10))
+	footer.add_theme_stylebox_override("panel", _box(Color("f3f5f2"), 0, 24, 10))
 	var rows := VBoxContainer.new()
 	rows.add_theme_constant_override("separation", 8)
 	footer.add_child(rows)
 	var controls := HBoxContainer.new()
-	controls.add_theme_constant_override("separation", 10)
+	controls.add_theme_constant_override("separation", 6)
 	rows.add_child(controls)
 	rewind_button = _button("Restart", controls)
 	rewind_button.pressed.connect(func(): clock.seek(0.0))
@@ -155,13 +200,28 @@ func _build_ui() -> void:
 	play_button.pressed.connect(func(): clock.play())
 	pause_button = _button("Pause", controls)
 	pause_button.pressed.connect(func(): clock.pause())
+	previous_round_button = _button("上一回合", controls)
+	previous_round_button.tooltip_text = "跳到上一个已记录回合的起点"
+	previous_round_button.pressed.connect(func(): jump_round(-1))
+	next_round_button = _button("下一回合", controls)
+	next_round_button.tooltip_text = "跳到下一个已记录回合的起点"
+	next_round_button.pressed.connect(func(): jump_round(1))
+	var skips := HBoxContainer.new()
+	skips.add_theme_constant_override("separation", 2)
+	controls.add_child(skips)
+	back_15_button = _button("−15 秒", skips)
+	back_15_button.tooltip_text = "后退 15 秒；保持当前倍速和播放状态"
+	back_15_button.pressed.connect(func(): skip_seconds(-15))
+	forward_15_button = _button("+15 秒", skips)
+	forward_15_button.tooltip_text = "快进 15 秒；到回放末尾自动暂停"
+	forward_15_button.pressed.connect(func(): skip_seconds(15))
 	var gap := Control.new()
 	gap.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	controls.add_child(gap)
 	status_label = _label("LOADING", 12, Color("087e8b"))
 	controls.add_child(status_label)
 	time_label = _label("00:00.000  /  00:20.000", 17)
-	time_label.custom_minimum_size.x = 225
+	time_label.custom_minimum_size.x = 210
 	time_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	controls.add_child(time_label)
 	for speed in [0.5, 1.0, 2.0]:
@@ -205,6 +265,9 @@ func _build_ui() -> void:
 			label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	var hint_row := HBoxContainer.new()
 	rows.add_child(hint_row)
+	round_label = _label("无回合记录", 13, Color("52677c"))
+	hint_row.add_child(round_label)
+	hint_row.add_theme_constant_override("separation", 18)
 	var hint := _label("SPACE  Play / pause     ·     WHEEL  Zoom     ·     RIGHT DRAG  Pan", 13, Color("52677c"))
 	hint.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	hint_row.add_child(hint)

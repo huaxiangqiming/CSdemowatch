@@ -6,13 +6,13 @@
 [ext_resource type="Script" path="res://scripts/ui/TimelineUI.gd" id="4"]
 [ext_resource type="Script" path="res://scripts/world/TestGrid.gd" id="5"]
 [sub_resource type="StandardMaterial3D" id="GroundMaterial"]
-albedo_color = Color(0.48, 0.55, 0.61, 1)
+albedo_color = Color(0.643, 0.678, 0.647, 1)
 roughness = 1.0
 [sub_resource type="PlaneMesh" id="GroundMesh"]
 size = Vector2(32, 32)
 [sub_resource type="Environment" id="Environment"]
 background_mode = 1
-background_color = Color(0.82, 0.87, 0.91, 1)
+background_color = Color(0.769, 0.780, 0.761, 1)
 ambient_light_source = 3
 ambient_light_color = Color(0.75, 0.82, 0.92, 1)
 ambient_light_energy = 0.65

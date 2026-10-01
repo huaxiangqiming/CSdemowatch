@@ -159,7 +159,7 @@ func apply_settings() -> void:
 	var values:Dictionary=settings.values
 	preload("res://scripts/config/TeamVisualConfig.gd").set_colors(Color(values.t_color),Color(values.ct_color))
 	if not is_instance_valid(viewer):return
-	viewer.get_node("WorldEnvironment").environment.background_color = [Color("d1dee8"),Color("e6e9ed"),Color("263545")][int(values.background_tone)]
+	viewer.apply_scene_palette(int(values.background_tone))
 	var controller=viewer.controller
 	for id in controller.player_views:
 		var view=controller.player_views[id];view.name_size=values.name_size;view.scale=Vector3.ONE*values.player_scale

@@ -7,6 +7,8 @@ var map_transform: RefCounted = Transform.new()
 var model: Node3D
 var map_bounds := AABB()
 var status := "Debug Plane"
+var map_color := Color("929b93")
+var ground_color := Color("a4ada5")
 var opacity := 1.0
 var view_mode := 1
 var material: StandardMaterial3D
@@ -132,6 +134,12 @@ func _load_model() -> void:
 	set_opacity(opacity)
 	set_cutaway(cutaway_enabled, cutaway_height)
 
+func set_palette(index: int) -> void:
+	var palette: Dictionary = preload("res://scripts/config/ScenePalette.gd").preset(index)
+	map_color = palette.map
+	ground_color = palette.ground
+	set_opacity(opacity)
+
 func set_view_mode(mode: int) -> void:
 	view_mode = mode
 	set_opacity(opacity)
@@ -141,12 +149,12 @@ func set_opacity(value: float) -> void:
 	var alpha := minf(opacity, 0.5) if view_mode == 2 else opacity
 	if cutaway_material != null:
 		cutaway_material = cutaway_opaque if alpha >= 0.999 else cutaway_transparent
-		cutaway_material.set_shader_parameter("map_color", Color(0.22, 0.24, 0.27, alpha))
+		cutaway_material.set_shader_parameter("map_color", Color(map_color, alpha))
 		set_cutaway(cutaway_enabled, cutaway_height)
 	if material != null:
-		material.albedo_color = Color(0.22, 0.24, 0.27, alpha)
+		material.albedo_color = Color(map_color, alpha)
 		material.transparency = BaseMaterial3D.TRANSPARENCY_DISABLED if alpha >= 0.999 else BaseMaterial3D.TRANSPARENCY_ALPHA
 	if is_instance_valid(fallback):
 		var mat: StandardMaterial3D = fallback.material_override
-		mat.albedo_color.a = alpha
+		mat.albedo_color = Color(ground_color, alpha)
 		mat.transparency = BaseMaterial3D.TRANSPARENCY_DISABLED if alpha >= 0.999 else BaseMaterial3D.TRANSPARENCY_ALPHA

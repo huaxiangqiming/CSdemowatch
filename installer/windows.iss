@@ -1,5 +1,5 @@
 #ifndef AppVersion
-  #define AppVersion "0.9.1-beta.1"
+  #define AppVersion "0.9.2-beta.1"
 #endif
 #ifndef PackageRoot
   #define PackageRoot "..\dist\windows"
@@ -7,7 +7,17 @@
 #ifndef ReleaseDir
   #define ReleaseDir "..\dist\releases"
 #endif
+#ifndef ArtifactSuffix
+  #define ArtifactSuffix ""
+#endif
+#ifndef VersionInfo
+  #define VersionInfo "0.9.2.0"
+#endif
 [Setup]
+#ifdef SignedRelease
+SignTool=cs2trusted
+SignedUninstaller=yes
+#endif
 AppId={{90737B99-1704-428F-9D37-5CC0F7B13869}
 AppName=CS2 Tactical Replay
 AppVersion={#AppVersion}
@@ -22,7 +32,7 @@ ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 MinVersion=10.0.17763
 OutputDir={#ReleaseDir}
-OutputBaseFilename=CS2TacticalReplay-{#AppVersion}-windows-x64-setup
+OutputBaseFilename=CS2TacticalReplay-{#AppVersion}-windows-x64-setup{#ArtifactSuffix}
 Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern
@@ -30,7 +40,7 @@ DisableProgramGroupPage=yes
 UninstallDisplayIcon={app}\CS2TacticalReplay.exe
 CloseApplications=yes
 RestartApplications=no
-VersionInfoVersion=0.9.1.0
+VersionInfoVersion={#VersionInfo}
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "chinesesimplified"; MessagesFile: "compiler:Languages\ChineseSimplified.isl"

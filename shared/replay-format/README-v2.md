@@ -96,3 +96,7 @@ Schema 负责形状；Go 与 Godot 运行时另行验证引用、ID 唯一、时
 Go serializer 会给其他事件输出 damage:0 和 health_remaining:0，这两个字段只有 player_hurt 类型有意义；无伤害的旧 V2 仍可加载。Parser 不保存 UI Status。Viewer 将正 HE 伤害解释为 0.8 秒 HE_HIT，火伤解释为 0.75 秒 BURNING；重复伤害延长区间，全部依据 ReplayClock。IN_SMOKE 只属于战术体积近似，既不是伤害事件，也不是引擎 occupancy。
 
 新公开 Mirage 样本有 264 条 PlayerHurt（15 HE、38 inferno），旧 Ancient 样本为零；不能将一个样本的数量作为格式约束。完整来源、校验及限制见 [M6 报告](../../docs/milestone-6.md)。
+
+### Recorded round navigation
+
+The existing `bomb_reset` event is emitted directly by the parser's `RoundStart` callback. The viewer can use its timestamp as a recorded round-start marker without changing V2 or inferring starts from bomb plants/defuses. Navigation indices count observed starts, including any recorded restarts; they do not represent match scores or official round numbers. Missing starts are not synthesized. Replays without these events retain time-based seeking but have disabled round navigation. This does not populate the binary container's reserved `rounds` family or introduce complete round outcome facts.
