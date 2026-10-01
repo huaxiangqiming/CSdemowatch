@@ -44,7 +44,7 @@ func describe_replay(metadata: Dictionary, filename: String) -> void:
 
 
 func show_error(message: String) -> void:
-	error_label.text = "Unable to load mock replay\n" + message
+	error_label.text = "Unable to read replay\n" + message
 	error_label.show()
 	status_label.text = "LOAD ERROR"
 	_set_enabled(false)
@@ -118,27 +118,13 @@ func _format_time(seconds: float) -> String:
 
 
 func _build_ui() -> void:
-	var ui_theme := Theme.new()
-	ui_theme.default_font_size = 16
-	ui_theme.set_color("font_color", "Label", Color("e6edf5"))
-	for state in ["normal", "hover", "pressed", "disabled", "focus"]:
-		var fill := Color("253344")
-		if state == "hover":
-			fill = Color("344a61")
-		elif state == "pressed":
-			fill = Color("23657a")
-		elif state == "disabled":
-			fill = Color("17202d")
-		ui_theme.set_stylebox(state, "Button", _box(fill, 6, 12, 9))
-	ui_theme.set_color("font_color", "Button", Color("e6edf5"))
-	ui_theme.set_color("font_disabled_color", "Button", Color("64758a"))
-	theme = ui_theme
+	theme = preload("res://scripts/application/ShellStyle.gd").theme()
 
 	var header := PanelContainer.new()
 	add_child(header)
 	header.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
 	header.offset_bottom = 92
-	header.add_theme_stylebox_override("panel", _box(Color("111a26"), 0, 28, 18))
+	header.add_theme_stylebox_override("panel", _box(Color("ffffff"), 0, 24, 14))
 	var header_row := HBoxContainer.new()
 	header.add_child(header_row)
 	var heading := VBoxContainer.new()
@@ -146,16 +132,16 @@ func _build_ui() -> void:
 	header_row.add_child(heading)
 	var title := _label("TACTICAL REPLAY", 24)
 	heading.add_child(title)
-	subtitle = _label("Loading replay...", 14, Color("95a9bd"))
+	subtitle = _label("Loading replay...", 14, Color("52677c"))
 	heading.add_child(subtitle)
-	var badge := _label("MILESTONE 02     •     LOCAL REPLAY", 14, Color("6cd4cf"))
+	var badge := _label("LOCAL • OFFLINE", 14, Color("087e8b"))
 	header_row.add_child(badge)
 
 	var footer := PanelContainer.new()
 	add_child(footer)
 	footer.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
-	footer.offset_top = -190
-	footer.add_theme_stylebox_override("panel", _box(Color("111a26"), 0, 28, 14))
+	footer.offset_top = -166
+	footer.add_theme_stylebox_override("panel", _box(Color("ffffff"), 0, 24, 10))
 	var rows := VBoxContainer.new()
 	rows.add_theme_constant_override("separation", 8)
 	footer.add_child(rows)
@@ -172,7 +158,7 @@ func _build_ui() -> void:
 	var gap := Control.new()
 	gap.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	controls.add_child(gap)
-	status_label = _label("LOADING", 12, Color("6cd4cf"))
+	status_label = _label("LOADING", 12, Color("087e8b"))
 	controls.add_child(status_label)
 	time_label = _label("00:00.000  /  00:20.000", 17)
 	time_label.custom_minimum_size.x = 225
@@ -201,7 +187,7 @@ func _build_ui() -> void:
 	var marks := ["00:00", "00:05", "00:10", "00:15", "00:20"]
 	for i in marks.size():
 		var mark: String = marks[i]
-		var label := _label(mark, 12, Color("8195ab"))
+		var label := _label(mark, 12, Color("52677c"))
 		tick_labels.append(label)
 		ticks.add_child(label)
 		label.anchor_left = i / 4.0
@@ -219,13 +205,13 @@ func _build_ui() -> void:
 			label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	var hint_row := HBoxContainer.new()
 	rows.add_child(hint_row)
-	var hint := _label("SPACE  Play / pause     ·     WHEEL  Zoom     ·     RIGHT DRAG  Pan", 13, Color("8195ab"))
+	var hint := _label("SPACE  Play / pause     ·     WHEEL  Zoom     ·     RIGHT DRAG  Pan", 13, Color("52677c"))
 	hint.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	hint_row.add_child(hint)
 	var reset := _button("Reset camera  [Home]", hint_row)
 	reset.pressed.connect(func(): reset_camera_requested.emit())
 
-	error_label = _label("", 20, Color("ffb4a9"))
+	error_label = _label("", 20, Color("b42338"))
 	add_child(error_label)
 	error_label.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
 	error_label.offset_left = -400
@@ -237,7 +223,7 @@ func _build_ui() -> void:
 	error_label.hide()
 
 
-func _label(text: String, font_size: int, color: Color = Color("e6edf5")) -> Label:
+func _label(text: String, font_size: int, color: Color = Color("23364a")) -> Label:
 	var label := Label.new()
 	label.text = text
 	label.add_theme_font_size_override("font_size", font_size)

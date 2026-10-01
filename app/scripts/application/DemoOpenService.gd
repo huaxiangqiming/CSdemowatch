@@ -39,10 +39,11 @@ func _work(demo: String, recent_hash: String) -> void:
 	log_lines.append("Demo hash: " + demo_hash)
 	cache_hit = cache.valid(demo_hash)
 	log_lines.append("Cache hit" if cache_hit else "Cache miss / invalid")
-	replay_path = cache.path(demo_hash)
+	replay_path = cache.path(demo_hash) if cache_hit else cache.binary_path(demo_hash)
 	for attempt in 2:
 		if is_cancelled(): result = {"ok":false,"cancelled":true}; return
 		if not cache_hit or attempt == 1:
+			replay_path = cache.binary_path(demo_hash)
 			if not exists: fail("MISSING_FILE","The original demo is missing and no valid cached replay is available."); return
 			var parser := parser_override if not parser_override.is_empty() else Info.parser_path()
 			if not FileAccess.file_exists(parser): fail("PARSER_MISSING","Parser component unavailable. Restore the application files.",parser); return
@@ -64,7 +65,7 @@ func _work(demo: String, recent_hash: String) -> void:
 		result = loader.result
 		if result.ok:
 			if not cache_hit or attempt == 1:
-				if not cache.commit(demo_hash,demo): fail("CACHE_WRITE","Replay parsed, but its cache could not be saved."); return
+				if not cache.commit(demo_hash,demo,replay_path): fail("CACHE_WRITE","Replay parsed, but its cache could not be saved."); return
 			result.replay_path = replay_path; result.demo_hash = demo_hash
 			return
 		cache_hit = false

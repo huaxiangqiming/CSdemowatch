@@ -5,6 +5,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"csdemowatch/parser/internal/demo"
@@ -16,7 +17,7 @@ func main() { os.Exit(run(os.Args[1:], os.Stdout, os.Stderr)) }
 
 func run(args []string, stdout, stderr io.Writer) int {
 	if len(args) == 1 && args[0] == "--version" {
-		fmt.Fprintln(stdout, "0.6.0")
+		fmt.Fprintln(stdout, "0.9.0")
 		return 0
 	}
 	v1 := len(args) > 0 && args[0] == "--v1"
@@ -24,7 +25,7 @@ func run(args []string, stdout, stderr io.Writer) int {
 		args = args[1:]
 	}
 	if len(args) != 2 {
-		fmt.Fprintln(stderr, "Usage: cs2parser [--v1] input.dem output.replay.json (default: V2)")
+		fmt.Fprintln(stderr, "Usage: cs2parser [--v1] input.dem output.replay.json|output.replay (default: V2)")
 		return 2
 	}
 	input, output := args[0], args[1]
@@ -93,7 +94,11 @@ func writeReplay(path string, r *replay.Replay) error {
 		return err
 	}
 	defer os.Remove(f.Name())
-	if err := serialization.WriteJSON(f, r); err != nil {
+	write := serialization.WriteJSON
+	if strings.EqualFold(filepath.Ext(path), ".replay") {
+		write = serialization.WriteBinary
+	}
+	if err := write(f, r); err != nil {
 		f.Close()
 		return err
 	}

@@ -20,6 +20,14 @@ func state_to_godot(raw: Dictionary) -> Dictionary:
 func replay_bounds(replay: Dictionary) -> AABB:
 	if replay.get("prepared_transform") == [scale_factor, rotation_degrees, offset] and replay.has("prepared_bounds"):
 		return replay.prepared_bounds
+	if replay.has("raw_bounds"):
+		var lo: Array = replay.raw_bounds[0]
+		var hi: Array = replay.raw_bounds[1]
+		var box := AABB(position_to_godot(Vector3(lo[0],lo[1],lo[2])), Vector3.ZERO)
+		for x in [lo[0],hi[0]]:
+			for y in [lo[1],hi[1]]:
+				for z in [lo[2],hi[2]]: box = box.expand(position_to_godot(Vector3(x,y,z)))
+		return box
 	var bounds := AABB()
 	var initialized := false
 	for frames in replay.tracks.values():

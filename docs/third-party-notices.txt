@@ -1,0 +1,11 @@
+CS2 Tactical Replay: third-party notices
+
+Godot Engine and its embedded libraries: see licenses/Godot-and-third-party.txt.
+Go runtime and parser dependencies: see licenses/.
+Source2Viewer CLI / ValveResourceFormat: MIT; see map-tools/LICENSE.txt.
+Source: https://github.com/ValveResourceFormat/ValveResourceFormat
+Additional map-tool library notices are included under licenses/map-tools/.
+
+This application is independent of Valve and is not an official CS2 product.
+The package contains no extracted Valve maps or recorded user matches.
+No license grant for this project's own source is implied by dependency licenses.

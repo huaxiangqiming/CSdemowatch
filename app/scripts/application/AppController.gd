@@ -35,10 +35,11 @@ var map_notice: HBoxContainer
 var map_notice_text: Label
 func _ready() -> void:
 	get_window().title=Info.TITLE
+	get_window().theme=Style.theme()
 	settings.load_settings();recent.load_entries();settings.changed.connect(apply_settings)
 	canvas=CanvasLayer.new();canvas.layer=30;add_child(canvas)
 	var base:=Control.new();base.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);base.mouse_filter=Control.MOUSE_FILTER_IGNORE;base.theme=Style.theme();canvas.add_child(base)
-	backdrop=ColorRect.new();backdrop.color=Style.INK;backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);base.add_child(backdrop)
+	backdrop=ColorRect.new();backdrop.color=Style.BACKGROUND;backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);base.add_child(backdrop)
 	home=preload("res://scripts/application/HomeScreen.gd").new();base.add_child(home)
 	loading=preload("res://scripts/application/LoadingScreen.gd").new();base.add_child(loading)
 	error_screen=preload("res://scripts/application/ErrorScreen.gd").new();base.add_child(error_screen)
@@ -61,6 +62,13 @@ func _ready() -> void:
 	dialog=FileDialog.new();dialog.access=FileDialog.ACCESS_FILESYSTEM;dialog.file_mode=FileDialog.FILE_MODE_OPEN_FILE;dialog.filters=PackedStringArray(["*.dem ; CS2 Demo"]);dialog.file_selected.connect(open_demo);base.add_child(dialog)
 	replay_toolbar=HBoxContainer.new();replay_toolbar.position=Vector2(20,16);base.add_child(replay_toolbar)
 	replay_toolbar.add_child(Style.button("← Home",go_home));replay_toolbar.add_child(Style.button("Settings",show_settings))
+	replay_toolbar.add_child(Style.button("Open Demo",func():
+		if is_instance_valid(viewer):viewer.controller.clock.pause()
+		dialog.popup_centered_ratio(0.75)))
+	var panels := Style.button("Panels",func():
+		if is_instance_valid(viewer):viewer.combat_panel.visible=not viewer.combat_panel.visible)
+	panels.tooltip_text="Show or hide viewing controls and event layers"
+	replay_toolbar.add_child(panels)
 	get_window().files_dropped.connect(files_dropped)
 	log.record("App start",Info.VERSION);go_home()
 	# Explicit developer-only JSON route remains available, never in normal UI.
@@ -120,7 +128,7 @@ func _commit_scene() -> void:
 	viewer._finish_scene(pending_result.replay_path,open_started)
 	viewer.debug_overlay.hide()
 	var header_row = viewer.timeline.subtitle.get_parent().get_parent()
-	var space := Control.new(); space.custom_minimum_size.x = 210; header_row.add_child(space); header_row.move_child(space, 0)
+	var space := Control.new(); space.custom_minimum_size.x = 340; header_row.add_child(space); header_row.move_child(space, 0)
 	viewer.timeline.subtitle.text="%s  /  %s" % [demo_path.get_file(),viewer.controller.replay.metadata.map]
 	recent.opened(demo_path,pending_result.demo_hash,viewer.controller.replay.metadata)
 	log.record("Replay load",viewer.controller.replay.metadata.map);log.record("Map load",viewer.map_manager.loaded_map)
@@ -151,6 +159,7 @@ func apply_settings() -> void:
 	var values:Dictionary=settings.values
 	preload("res://scripts/config/TeamVisualConfig.gd").set_colors(Color(values.t_color),Color(values.ct_color))
 	if not is_instance_valid(viewer):return
+	viewer.get_node("WorldEnvironment").environment.background_color = [Color("d1dee8"),Color("e6e9ed"),Color("263545")][int(values.background_tone)]
 	var controller=viewer.controller
 	for id in controller.player_views:
 		var view=controller.player_views[id];view.name_size=values.name_size;view.scale=Vector3.ONE*values.player_scale
@@ -173,7 +182,7 @@ func _setup_map_ui() -> void:
 	map_panel.reload_requested.connect(func():viewer.reload_map();_update_map_notice();map_panel.completed(false,"Tactical map loaded."))
 	map_panel.cancel_requested.connect(func():map_queue.cancel(viewer.controller.replay.metadata.map);map_panel.busy("Cancelling after the current safe operation…"))
 	var debug:=CheckButton.new();debug.text="Debug / Player Status";debug.toggled.connect(func(value):viewer.debug_overlay.visible=value);viewer.view_controls.get_child(0).add_child(debug)
-	map_notice=HBoxContainer.new();map_notice.position=Vector2(20,76);viewer.get_node("UI").add_child(map_notice)
+	map_notice=HBoxContainer.new();map_notice.theme=Style.theme();map_notice.position=Vector2(20,96);viewer.get_node("UI").add_child(map_notice)
 	map_notice_text=Label.new();map_notice_text.add_theme_font_size_override("font_size",13);map_notice.add_child(map_notice_text)
 	map_notice.add_child(Style.button("Dismiss",func():map_notice.hide()))
 	_update_map_notice()

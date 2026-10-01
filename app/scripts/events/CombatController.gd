@@ -37,6 +37,10 @@ func set_layer(key: String, enabled: bool) -> void:
 
 func refresh(time: float) -> void:
 	if replay_controller == null: return
+	if not replay_controller.load_error.is_empty():
+		hide()
+		return
+	show()
 	var transform = replay_controller.map_transform
 	var smoke: Array = index.get_active_smoke(time)
 	var fire: Array = index.get_active_fire(time)

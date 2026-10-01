@@ -1,4 +1,17 @@
-CS2 Tactical Replay — v0.8.1-dev
+Windows 安装与启动 / Install and launch
+
+从 GitHub Releases 下载 *-setup.exe 并运行，或下载 *-portable.zip 后完整解压。
+安装版提供中英文向导，无需安装 Go/Godot；默认仅安装到当前用户，不要求管理员权限。
+这是未签名的 Beta 版本，Windows 可能显示发布者未验证提示；请核对发布页 SHA256SUMS.txt。
+卸载移除应用，保留 %LOCALAPPDATA%/CS2TacticalReplay 中的个人设置和缓存。
+地图准备需要本机合法安装的 CS2；安装包不包含 Valve 地图。
+
+Download *-setup.exe from GitHub Releases, or extract the entire *-portable.zip.
+The installer supports English / Simplified Chinese and installs for the current user.
+This beta is unsigned; Windows may show an unverified publisher prompt.
+Verify SHA256SUMS.txt from the release. Uninstall preserves user settings and caches.
+
+CS2 Tactical Replay — v0.9.1-beta.1
 
 1. Keep this entire folder: EXE, PCK, cs2parser.exe, cs2maptool.exe and map-tools
    (Source2Viewer CLI, its DLLs and MIT license).
@@ -35,7 +48,13 @@ Conservative roof classification protects walkable floors and keeps unknown face
 Some small/sloped roofs and upper floors still obscure lower areas; transparency
 can help. Inferno has 2.67M triangles and exceeds the target complexity budget.
 Large JSON Replays take seconds to load. Cancel waits for the current tool.
-No installer, account, cloud, streaming or advanced tactical analysis is included.
+No account or cloud service is required. Advanced tactical analysis is not included.
 
-Full scope, measurements, screenshots and known issues: docs/milestone-8.md
+Full scope, measurements, screenshots and known issues: docs/milestone-9-1.md
 in the source project.
+
+New Demo caches use indexed .replay files. Older JSON caches remain readable.
+Player tracks load on demand; events and projectiles currently remain resident.
+
+Appearance: Settings > Scene Background selects light blue gray, soft gray or dark slate.
+The Panels button hides the side tools for an unobstructed map view.

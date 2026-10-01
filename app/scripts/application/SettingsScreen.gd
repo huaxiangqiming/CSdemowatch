@@ -25,9 +25,9 @@ func _ready() -> void:
 	header.add_child(Style.button("Back",func():back_requested.emit()))
 	scroll = ScrollContainer.new();scroll.custom_minimum_size.y=420;box.add_child(scroll)
 	grid=GridContainer.new();grid.columns=2;grid.size_flags_horizontal=Control.SIZE_EXPAND_FILL;grid.add_theme_constant_override("h_separation",36);grid.add_theme_constant_override("v_separation",9);scroll.add_child(grid)
-	var tabs := {"MAPS":["cs2_path","auto_prepare_maps"],"VISUAL":["name_size","player_scale","smoke_visibility","map_opacity","t_color","ct_color","player_status"],"CAMERA":["pan_speed","zoom_speed","orbit_sensitivity"],"DEFAULT LAYERS":["players","names","smoke","fire","grenades","trajectories","shots","kill_feed","bomb"]}
-	var titles := {"cs2_path":"CS2 Installation Path","auto_prepare_maps":"Auto Prepare Maps","name_size":"Player Name Size","player_scale":"Player Scale","smoke_visibility":"Smoke Visibility","map_opacity":"Map Opacity","t_color":"T Accent","ct_color":"CT Accent","player_status":"Player Status Indicators","pan_speed":"Pan Speed","zoom_speed":"Zoom Speed","orbit_sensitivity":"Orbit Sensitivity","names":"Player Names","kill_feed":"Kill Feed"}
-	for section in tabs:
+	var tabs := {"MAPS":["cs2_path","auto_prepare_maps"],"VISUAL":["background_tone","name_size","player_scale","smoke_visibility","map_opacity","t_color","ct_color","player_status"],"CAMERA":["pan_speed","zoom_speed","orbit_sensitivity"],"DEFAULT LAYERS":["players","names","smoke","fire","grenades","trajectories","shots","kill_feed","bomb"]}
+	var titles := {"background_tone":"Scene Background","cs2_path":"CS2 Installation Path","auto_prepare_maps":"Auto Prepare Maps","name_size":"Player Name Size","player_scale":"Player Scale","smoke_visibility":"Smoke Visibility","map_opacity":"Map Opacity","t_color":"T Accent","ct_color":"CT Accent","player_status":"Player Status Indicators","pan_speed":"Pan Speed","zoom_speed":"Zoom Speed","orbit_sensitivity":"Orbit Sensitivity","names":"Player Names","kill_feed":"Kill Feed"}
+	for section in ["VISUAL", "CAMERA", "DEFAULT LAYERS", "MAPS"]:
 		grid.add_child(Style.label(section,14));grid.add_child(Control.new())
 		for key in tabs[section]:
 			grid.add_child(Style.label(titles.get(key,key.capitalize())))
@@ -39,9 +39,9 @@ func _ready() -> void:
 				var c:=ColorPickerButton.new();c.color=Color(value);c.edit_alpha=false;c.text="#"+value;c.add_theme_color_override("font_color",Color(value));c.color_changed.connect(func(v):c.text="#"+v.to_html(false);c.add_theme_color_override("font_color",v);store.set_value(key,v.to_html(false)));control=c
 			elif value is String:
 				var c:=LineEdit.new();c.text=value;c.placeholder_text="Optional local installation folder";c.text_changed.connect(func(v):store.set_value(key,v);check_delay=0.5);control=c
-			elif key in ["smoke_visibility","auto_prepare_maps"]:
+			elif key in ["smoke_visibility","auto_prepare_maps","background_tone"]:
 				var c:=OptionButton.new()
-				for text in (["Ask","Auto","Never"] if key=="auto_prepare_maps" else ["Low","Tactical","Strong"]):c.add_item(text)
+				for text in (["Ask","Auto","Never"] if key=="auto_prepare_maps" else (["Light blue gray","Soft gray","Dark slate"] if key=="background_tone" else ["Low","Tactical","Strong"])):c.add_item(text)
 				c.select(int(value));c.item_selected.connect(func(v):store.set_value(key,v));control=c
 			else:
 				var c:=SpinBox.new();var bounds:Array={"name_size":[10,24,1],"player_scale":[0.5,2,0.1],"map_opacity":[0.25,1,0.25]}.get(key,[0.25,3,0.25]);c.min_value=bounds[0];c.max_value=bounds[1];c.step=bounds[2];c.value=value;c.value_changed.connect(func(v):store.set_value(key,v));control=c

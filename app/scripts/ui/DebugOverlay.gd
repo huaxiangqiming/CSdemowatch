@@ -17,7 +17,7 @@ func _ready() -> void:
 	position = Vector2(20, 110)
 	custom_minimum_size = Vector2(280, 0)
 	var style := StyleBoxFlat.new()
-	style.bg_color = Color(0.065, 0.095, 0.13, 0.94)
+	style.bg_color = Color(0.96, 0.98, 1.0, 0.97)
 	style.content_margin_left = 14
 	style.content_margin_right = 14
 	style.content_margin_top = 12
@@ -31,7 +31,7 @@ func _ready() -> void:
 	add_child(scroll); scroll.add_child(column)
 	column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var open_button := Button.new()
-	open_button.text = "Open Replay JSON"
+	open_button.text = "Open Replay File"
 	open_button.focus_mode = Control.FOCUS_NONE
 	open_button.pressed.connect(func(): open_replay_requested.emit())
 	column.add_child(open_button)

@@ -1,8 +1,8 @@
 extends RefCounted
 const TITLE := "CS2 Tactical Replay"
 const SUBTITLE := "3D Tactical Demo Analyzer"
-const VERSION := "0.8.1-dev"
-const PARSER_VERSION := "0.6.0"
+const VERSION := "0.9.1-beta.1"
+const PARSER_VERSION := "0.9.0"
 static func data_root() -> String:
 	var override := OS.get_environment("CS2_REPLAY_DATA_ROOT")
 	if not override.is_empty(): return override

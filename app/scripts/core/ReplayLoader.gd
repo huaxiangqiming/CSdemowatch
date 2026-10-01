@@ -1,10 +1,14 @@
 extends RefCounted
-## Strict JSON boundary. Returns {ok, data, error}; no partial replay on failure.
+## JSON and versioned binary boundary. Returns {ok, data, error}; no partial replay on failure.
 
 func load_replay(path: String) -> Dictionary:
 	var file := FileAccess.open(path, FileAccess.READ)
 	if file == null:
 		return _error("Cannot open replay: %s (error %s)" % [path, FileAccess.get_open_error()])
+	if file.get_buffer(8) == PackedByteArray(preload("res://scripts/core/BinaryReplayStream.gd").MAGIC):
+		file.close()
+		return preload("res://scripts/core/BinaryReplayStream.gd").new().load_replay(path)
+	file.seek(0)
 	return parse_text(file.get_as_text())
 
 

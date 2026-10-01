@@ -1,4 +1,5 @@
 extends Node3D
+signal replay_failed(message: String)
 
 const Loader = preload("res://scripts/core/ReplayLoader.gd")
 const Clock = preload("res://scripts/core/ReplayClock.gd")
@@ -54,6 +55,17 @@ func set_map_transform(value: RefCounted) -> void:
 
 
 func _apply_time(seconds: float) -> void:
+	if replay.has("stream"):
+		var tracks: Dictionary = replay.stream.tracks_at(seconds)
+		if tracks.is_empty():
+			clock.pause()
+			load_error = replay.stream.error
+			current_states.clear()
+			for view in player_views.values(): view.hide()
+			replay_failed.emit(load_error)
+			return
+		replay.tracks = tracks
+		load_error = ""
 	for id in player_views:
 		var raw: Dictionary = Sampler.sample(replay.tracks[id], seconds)
 		current_states[id] = raw

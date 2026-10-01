@@ -21,6 +21,8 @@ var replay_loading_ms := 0
 var _activity := 0.0
 
 func _ready() -> void:
+	get_window().theme = preload("res://scripts/application/ShellStyle.gd").theme()
+	controller.replay_failed.connect(func(message): timeline.show_error(message))
 	map_manager = preload("res://scripts/map/MapManager.gd").new()
 	map_manager.name = "MapManager"
 	add_child(map_manager)
@@ -54,12 +56,12 @@ func _ready() -> void:
 	view_controls.get_child(0).add_child(retry)
 	for label in timeline.find_children("*", "Label", true, false):
 		if label.text.begins_with("MILESTONE"):
-			label.text = "TACTICAL REPLAY     •     OFFLINE WORKSPACE"
+			label.text = "LOCAL • OFFLINE"
 	debug_overlay.open_replay_requested.connect(_open_dialog)
 	file_dialog = FileDialog.new()
 	file_dialog.access = FileDialog.ACCESS_FILESYSTEM
 	file_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
-	file_dialog.filters = PackedStringArray(["*.json ; Replay JSON"])
+	file_dialog.filters = PackedStringArray(["*.json,*.replay ; Replay JSON or binary"])
 	file_dialog.file_selected.connect(request_replay)
 	$UI.add_child(file_dialog)
 	if not has_meta("shell_session"): get_window().files_dropped.connect(_files_dropped)
@@ -72,6 +74,9 @@ func _ready() -> void:
 	elif "--script" in OS.get_cmdline_args(): open_replay(path)
 	else: request_replay(path)
 	timeline.reset_camera_requested.connect($TacticalCamera.reset_view)
+	var ui_theme = preload("res://scripts/application/ShellStyle.gd").theme()
+	for control in $UI.get_children():
+		if control is Control: control.theme = ui_theme
 
 func open_replay(path: String) -> bool:
 	controller.clock.pause()
@@ -113,7 +118,7 @@ func _open_dialog() -> void:
 	file_dialog.popup_centered_ratio(0.75)
 
 func _files_dropped(files: PackedStringArray) -> void:
-	if files.size() == 1 and files[0].get_extension().to_lower() == "json":
+	if files.size() == 1 and files[0].get_extension().to_lower() in ["json", "replay"]:
 		request_replay(files[0])
 
 func _create_loading_ui() -> void:

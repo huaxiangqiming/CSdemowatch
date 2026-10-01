@@ -1,7 +1,7 @@
 extends RefCounted
 signal changed
 const Info = preload("res://scripts/application/AppInfo.gd")
-const DEFAULTS := {"cs2_path":"", "auto_prepare_maps":1, "name_size":14.0, "player_scale":1.0, "smoke_visibility":1, "map_opacity":1.0, "t_color":"ffb454", "ct_color":"66b9ff", "pan_speed":1.0, "zoom_speed":1.0, "orbit_sensitivity":1.0, "players":true, "names":true, "player_status":true, "smoke":true, "fire":true, "grenades":true, "trajectories":true, "shots":true, "kill_feed":true, "bomb":true}
+const DEFAULTS := {"background_tone":0, "cs2_path":"", "auto_prepare_maps":1, "name_size":14.0, "player_scale":1.0, "smoke_visibility":1, "map_opacity":1.0, "t_color":"ffb454", "ct_color":"66b9ff", "pan_speed":1.0, "zoom_speed":1.0, "orbit_sensitivity":1.0, "players":true, "names":true, "player_status":true, "smoke":true, "fire":true, "grenades":true, "trajectories":true, "shots":true, "kill_feed":true, "bomb":true}
 var values := DEFAULTS.duplicate(true)
 var error := ""
 var path := Info.data_root().path_join("settings.json")
@@ -20,7 +20,7 @@ func _assign(key: String, value: Variant) -> void:
 		if key in ["t_color","ct_color"] and not Color.html_is_valid(value): return
 		values[key] = value
 	elif (d is float or d is int) and (value is float or value is int) and is_finite(value):
-		var bounds: Array = {"name_size":[10,24],"player_scale":[0.5,2],"smoke_visibility":[0,2],"auto_prepare_maps":[0,2],"map_opacity":[0.25,1],"pan_speed":[0.25,3],"zoom_speed":[0.25,3],"orbit_sensitivity":[0.25,3]}.get(key,[0,1])
+		var bounds: Array = {"name_size":[10,24],"player_scale":[0.5,2],"background_tone":[0,2],"smoke_visibility":[0,2],"auto_prepare_maps":[0,2],"map_opacity":[0.25,1],"pan_speed":[0.25,3],"zoom_speed":[0.25,3],"orbit_sensitivity":[0.25,3]}.get(key,[0,1])
 		values[key] = clampf(value,bounds[0],bounds[1])
 func set_value(key: String, value: Variant) -> void:
 	_assign(key,value); save(); changed.emit()

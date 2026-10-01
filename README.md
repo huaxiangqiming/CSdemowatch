@@ -8,7 +8,9 @@
 
 CSdemowatch 将已完成的 Counter-Strike 2 Demo 转换为可自由观察的三维战术沙盘。通过灰色抽象地图和清晰的战术信息，复盘玩家走位、交火、投掷物配合与 Bomb 状态。所有解析、缓存和播放均在本机完成。
 
-当前版本：**0.8.1-dev（M8.1）**。这是开发中的战术复盘工具，不追求还原 CS2 原版画面，也不保证所有 Demo 或地图版本兼容。
+M9 新增 .replay 二进制缓存和 10 秒轨迹窗口，最多保留三个已解码窗口；旧 JSON 继续兼容。事件与投掷物目前仍整体加载。详见 [M9 验收报告](docs/milestone-9.md) 和 [二进制格式](shared/replay-format/README-binary.md)。
+
+当前版本：**0.9.1-beta.1（浅色界面 / Windows 安装版）**。这是开发中的战术复盘工具，不追求还原 CS2 原版画面，也不保证所有 Demo 或地图版本兼容。
 
 ### 已实现
 
@@ -23,7 +25,14 @@ CSdemowatch 将已完成的 Counter-Strike 2 Demo 转换为可自由观察的三
 
 ### 获取与运行
 
-**此仓库提供源码，不包含预编译 EXE、Godot、真实 Demo 或 Valve 地图资源。** 本地开发记录中提到的 `dist/windows` 和截图不代表仓库已发布下载包。
+普通用户直接到 [GitHub Releases](https://github.com/huaxiangqiming/CSdemowatch/releases/tag/v0.9.1-beta.1) 下载：
+
+- [Windows x64 安装版 EXE](https://github.com/huaxiangqiming/CSdemowatch/releases/download/v0.9.1-beta.1/CS2TacticalReplay-0.9.1-beta.1-windows-x64-setup.exe)：中英文安装向导，当前用户安装，开始菜单启动。
+- [免安装 ZIP](https://github.com/huaxiangqiming/CSdemowatch/releases/download/v0.9.1-beta.1/CS2TacticalReplay-0.9.1-beta.1-windows-x64-portable.zip)：完整解压后打开 `CS2TacticalReplay.exe`。
+
+无需自行安装 Go、Godot 或 Python。Windows 10/11 x64、OpenGL 3.3；Beta 尚未签名，Windows 可能显示未验证发布者提示，请核对发布页的 `SHA256SUMS.txt`。地图准备需要本机 CS2，安装包不含 Valve 地图或真实 Demo。应用界面目前为英文，背景可在 Settings → Scene Background 设置，Panels 可收起侧栏。
+
+以下为开发者构建方式：
 
 开发环境：Windows、PowerShell、Go **1.25+**、Godot **4.5.1 Standard**。
 
@@ -59,18 +68,21 @@ Smoke、Fire 和部分视觉效果属于战术近似；未实现精确引擎级 
 
 ### 文档与路线
 
+- [M9.1 界面与安装验收](docs/milestone-9-1.md)
 - [M8.1 地图可视性验收](docs/milestone-8-1.md)
 - [项目规范](PROJECT_SPEC.md) · [架构](docs/architecture.md) · [测试](docs/testing.md)
 - [Replay V1](shared/replay-format/README.md) · [Replay V2](shared/replay-format/README-v2.md)
 - [历史开发说明](docs/development-history.md)
 
-下一阶段计划：M9 二进制 Replay 与按需加载；M10 战术分析；M11 时间轴和观察体验；M12 发布工程；M13 Public Beta；M14 1.0。路线图不代表这些功能已经实现。
+当前 M9 已完成二进制轨迹按需加载核心，包含轨迹后台预取，事件分块仍待完成；M9.1 提前完成了浅色界面和 Windows 安装发布。后续计划：M10 战术分析；M11 时间轴和观察体验；M12 发布工程；M13 Public Beta；M14 1.0。路线图不代表这些功能已经实现。
 
 ## English
 
 CSdemowatch turns completed Counter-Strike 2 demos into an interactive **3D tactical replay sandbox**. A neutral gray map keeps attention on player movement, utility, engagements and bomb state. Parsing, caching and playback run locally.
 
-Current version: **0.8.1-dev / M8.1**. This is a development build for tactical review, not a recreation of the original CS2 graphics or a promise of universal demo compatibility.
+M9 adds indexed, compressed .replay caches and on-demand ten-second player-track windows. Existing JSON caches remain supported. Events and projectiles are still loaded eagerly; see the [binary format specification](shared/replay-format/README-binary.md) for limits.
+
+Current version: **0.9.1-beta.1 / light UI and Windows installer**. This is a development build for tactical review, not a recreation of the original CS2 graphics or a promise of universal demo compatibility.
 
 ### Features
 
@@ -94,7 +106,9 @@ go -C parser vet ./...
 
 Real-demo acceptance tests require separately supplied samples. Map preparation requires a legitimate local CS2 installation and the Source2Viewer CLI dependencies listed above. Build the map tool with `go -C parser build -trimpath -o bin/cs2maptool.exe ./cmd/cs2maptool`. For Windows packaging, prepare the Godot export templates and `.tools/vrf/` dependencies, then run `tools/build_windows.ps1`.
 
-**This source repository does not include prebuilt executables, engine binaries, real demos, extracted Valve assets, or local caches.** Historical documentation references local acceptance artifacts that are intentionally not included.
+**Download the [Windows installer or portable ZIP from Releases](https://github.com/huaxiangqiming/CSdemowatch/releases/tag/v0.9.1-beta.1).** No separate Godot, Go or Python installation is required. Windows 10/11 x64 and OpenGL 3.3 are required. This beta is unsigned; Windows may show an unverified publisher warning. Verify `SHA256SUMS.txt`. The application UI is English; the installer supports English and Simplified Chinese. No real demos, Valve map assets or local caches are distributed.
+
+The default UI is light, scene backgrounds are configurable in Settings, and Panels hides the sidebar. Run `tools/package_windows.ps1 -ISCC <path-to-ISCC.exe>` with Inno Setup 7 to reproduce the installer, portable ZIP and checksums. See the [M9.1 acceptance report](docs/milestone-9-1.md).
 
 ### Compatibility and roadmap
 
@@ -102,7 +116,7 @@ Ancient, Mirage, Dust2 and Vertigo have existing real-replay acceptance coverage
 
 Utility visuals are tactical approximations. Large JSON replays and high-triangle maps still have performance limitations. Use **View → Height cutaway** to inspect lower floors without deleting map structures.
 
-Planned stages: binary/streamed replay storage (M9), tactical analysis (M10), timeline and viewing improvements (M11), release engineering (M12), public beta (M13), and 1.0 (M14).
+M9 track streaming is implemented, with track prefetch implemented and full event streaming still pending. M9.1 adds the light UI and Windows distribution. Planned stages: tactical analysis (M10), timeline and viewing improvements (M11), release engineering (M12), public beta (M13), and 1.0 (M14).
 
 ## 项目结构 / Repository layout
 

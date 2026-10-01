@@ -18,7 +18,8 @@ var _last_kill_ids := ""
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
-	offset_left = -320; offset_right = -20; offset_top = 110; offset_bottom = 596
+	offset_left = -344; offset_right = -16; offset_top = 104
+	anchor_bottom = 1.0; offset_bottom = -182
 
 func setup(view_controls: Control, controller: Node3D) -> void:
 	combat = controller
@@ -49,7 +50,7 @@ func setup(view_controls: Control, controller: Node3D) -> void:
 	smoke_visibility.select(1)
 	smoke_visibility.item_selected.connect(func(index): combat.smoke_opacity = index; combat.refresh(combat.replay_controller.clock.current_time))
 	layers.add_child(smoke_visibility)
-	bomb_status = Label.new(); bomb_status.add_theme_color_override("font_color", Palette.BOMB); bomb_status.add_theme_font_size_override("font_size", 13); layers.add_child(bomb_status)
+	bomb_status = Label.new(); bomb_status.add_theme_color_override("font_color", Color("b42338")); bomb_status.add_theme_font_size_override("font_size", 13); layers.add_child(bomb_status)
 	stats = Label.new()
 	stats.add_theme_font_size_override("font_size", 12)
 	layers.add_child(stats)
@@ -96,7 +97,7 @@ func setup(view_controls: Control, controller: Node3D) -> void:
 		if event.type=="player_hurt":combat.replay_controller.clock.pause();combat.replay_controller.clock.seek(event.time+0.2);inspect_player_requested.emit(event.victim_player_id))
 	inspect.add_child(inspect_damage)
 	combat.refreshed.connect(refresh)
-	current_tab = 1
+	current_tab = 0
 
 func bind_replay() -> void:
 	player_names.clear()
@@ -147,7 +148,7 @@ func refresh() -> void:
 		var event = shown_kills[i]
 		row.text = "%s  %s → %s\n%s%s" % [_time(event.time), player_names.get(event.actor_player_id, "World"), player_names.get(event.victim_player_id, "Unknown"), event.weapon, "  [HS]" if event.headshot else ""]
 		row.tooltip_text = row.text
-		row.add_theme_color_override("font_color", Palette.team_color(event.actor_team))
+		row.add_theme_color_override("font_color", Color("945300") if event.actor_team == "T" else Color("1765a0"))
 
 func _time(time: float) -> String:
 	return "%02d:%02d" % [int(time) / 60, int(time) % 60]
