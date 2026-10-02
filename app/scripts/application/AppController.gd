@@ -44,7 +44,7 @@ func _ready() -> void:
 	loading=preload("res://scripts/application/LoadingScreen.gd").new();base.add_child(loading)
 	error_screen=preload("res://scripts/application/ErrorScreen.gd").new();base.add_child(error_screen)
 	settings_screen=preload("res://scripts/application/SettingsScreen.gd").new();settings_screen.store=settings;base.add_child(settings_screen)
-	home.open_requested.connect(func():dialog.popup_centered_ratio(0.75))
+	home.open_requested.connect(_show_demo_dialog)
 	home.settings_requested.connect(show_settings)
 	home.recent_requested.connect(func(entry):open_demo(entry.demo_path,entry.demo_hash))
 	loading.cancel_requested.connect(cancel_loading)
@@ -60,11 +60,14 @@ func _ready() -> void:
 		settings_screen.prepared_status.text="Cache deleted." if cache.delete_map(name) else "Could not delete map cache."
 		settings_screen.refresh_maps())
 	dialog=FileDialog.new();dialog.access=FileDialog.ACCESS_FILESYSTEM;dialog.file_mode=FileDialog.FILE_MODE_OPEN_FILE;dialog.filters=PackedStringArray(["*.dem ; CS2 Demo"]);dialog.file_selected.connect(open_demo);base.add_child(dialog)
+	Style.configure_file_dialog(dialog,"选择 CS2 Demo · .dem")
+	dialog.current_dir=OS.get_system_dir(OS.SYSTEM_DIR_DOCUMENTS)
+	for entry in recent.entries:
+		if DirAccess.dir_exists_absolute(entry.demo_path.get_base_dir()):
+			dialog.current_dir=entry.demo_path.get_base_dir();break
 	replay_toolbar=HBoxContainer.new();replay_toolbar.position=Vector2(20,16);base.add_child(replay_toolbar)
 	replay_toolbar.add_child(Style.button("← Home",go_home));replay_toolbar.add_child(Style.button("Settings",show_settings))
-	replay_toolbar.add_child(Style.button("Open Demo",func():
-		if is_instance_valid(viewer):viewer.controller.clock.pause()
-		dialog.popup_centered_ratio(0.75)))
+	replay_toolbar.add_child(Style.button("Open Demo",_show_demo_dialog))
 	var panels := Style.button("Panels",func():
 		if is_instance_valid(viewer):viewer.combat_panel.visible=not viewer.combat_panel.visible)
 	panels.tooltip_text="Show or hide viewing controls and event layers"
@@ -75,6 +78,10 @@ func _ready() -> void:
 	var args:=OS.get_cmdline_user_args();var i:=args.find("--replay")
 	if i>=0 and i+1<args.size():
 		viewer=preload("res://scenes/Main.tscn").instantiate();add_child(viewer);_set_state(AppState.REPLAY)
+func _show_demo_dialog() -> void:
+	if is_instance_valid(viewer):viewer.controller.clock.pause()
+	dialog.popup_centered_ratio(0.85)
+
 func _set_state(value: int) -> void:
 	Engine.max_fps = 0 if value == AppState.REPLAY else 60
 	state=value;home.visible=value==AppState.HOME;loading.visible=value==AppState.LOADING;settings_screen.visible=value==AppState.SETTINGS;error_screen.visible=value==AppState.ERROR;backdrop.visible=value!=AppState.REPLAY;replay_toolbar.visible=value==AppState.REPLAY
@@ -127,6 +134,7 @@ func _commit_scene() -> void:
 	if cancel_pending: _clear_session();pending_result.clear();go_home();return
 	viewer._finish_scene(pending_result.replay_path,open_started)
 	viewer.debug_overlay.hide()
+	viewer.combat_panel.hide()
 	var header_row = viewer.timeline.subtitle.get_parent().get_parent()
 	var space := Control.new(); space.custom_minimum_size.x = 340; header_row.add_child(space); header_row.move_child(space, 0)
 	viewer.timeline.subtitle.text="%s  /  %s" % [demo_path.get_file(),viewer.controller.replay.metadata.map]

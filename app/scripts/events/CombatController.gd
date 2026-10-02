@@ -9,7 +9,7 @@ var shots: Node3D
 var bomb: Node3D
 var flashed: Node3D
 var smoke_opacity := 1
-var layers := {"player_status": true, "burning": true, "he_hit": true, "in_smoke": true, "bomb_carrier": true, "players": true, "names": true, "smoke": true, "smoke_tint": true, "smoke_marker": true, "fire": true, "flash_effects": true, "flashed_players": true, "he_effects": true, "grenades": true, "trajectories": true, "shots": true, "kill_feed": true, "bomb": true}
+var layers := {"player_status": true, "burning": true, "he_hit": true, "in_smoke": true, "bomb_carrier": true, "players": true, "names": true, "dead_names": false, "smoke": true, "smoke_tint": true, "smoke_marker": true, "fire": true, "flash_effects": true, "flashed_players": true, "he_effects": true, "grenades": true, "trajectories": true, "shots": true, "kill_feed": true, "bomb": true}
 var counts := {"smoke": 0, "fire": 0, "projectiles": 0, "shots": 0, "kills": 0}
 var recent_kills: Array = []
 
@@ -65,5 +65,5 @@ func refresh(time: float) -> void:
 	for id in replay_controller.player_views:
 		var view = replay_controller.player_views[id]
 		view.visible = layers.players and replay_controller.current_states.get(id, {}).get("available", false)
-		view.get_node("Name").visible = layers.names
+		view.get_node("Name").visible = layers.names and (view._alive or layers.dead_names)
 	refreshed.emit()

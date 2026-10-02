@@ -36,7 +36,7 @@ func setup(view_controls: Control, controller: Node3D) -> void:
 	var grid := GridContainer.new()
 	grid.columns = 2
 	layers.add_child(grid)
-	var titles := {"player_status": "Player Status", "burning": "Burning", "he_hit": "HE Hit", "in_smoke": "In Smoke", "bomb_carrier": "Carrier Red Name", "players": "Players", "names": "Player Names", "smoke": "Smoke", "smoke_tint": "Smoke Team Tint", "smoke_marker": "Smoke Marker", "fire": "Fire", "flash_effects": "Flash Effects", "flashed_players": "Flashed Players", "he_effects": "HE Effects", "grenades": "Grenades", "trajectories": "Trajectories", "shots": "Shots", "kill_feed": "Kill Feed", "bomb": "Bomb"}
+	var titles := {"player_status": "Player Status", "burning": "Burning", "he_hit": "HE Hit", "in_smoke": "In Smoke", "bomb_carrier": "Carrier Red Name", "players": "Players", "names": "Player Names", "dead_names": "死亡玩家姓名", "smoke": "Smoke", "smoke_tint": "Smoke Team Tint", "smoke_marker": "Smoke Marker", "fire": "Fire", "flash_effects": "Flash Effects", "flashed_players": "Flashed Players", "he_effects": "HE Effects", "grenades": "Grenades", "trajectories": "Trajectories", "shots": "Shots", "kill_feed": "Kill Feed", "bomb": "Bomb"}
 	for key in combat.layers:
 		var toggle := CheckBox.new()
 		toggle.text = titles[key]

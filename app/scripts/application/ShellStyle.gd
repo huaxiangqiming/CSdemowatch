@@ -60,7 +60,40 @@ static func theme() -> Theme:
 	t.set_stylebox("slider","HSlider",slider)
 	t.set_stylebox("grabber_area","HSlider",box(ACCENT,0,3))
 	t.set_stylebox("grabber_area_highlight","HSlider",box(ACCENT,0,3))
+	# Dialogs and file lists must not inherit Godot's dark fallback surfaces.
+	for kind in ["AcceptDialog", "FileDialog", "Tree", "ItemList"]:
+		var surface := box(Color("fafbf9"), 10, 6)
+		surface.border_color = Color("bdc9c5"); surface.set_border_width_all(1)
+		t.set_stylebox("panel", kind, surface)
+	for kind in ["Tree", "ItemList"]:
+		for key in ["selected", "selected_focus"]:
+			t.set_stylebox(key, kind, box(Color("c5e5e7"), 4, 4))
+		t.set_stylebox("hovered", kind, box(Color("e5efec"), 4, 4))
+		t.set_color("font_outline_color", kind, Color.TRANSPARENT)
+		t.set_color("guide_color", kind, Color("dce3df"))
+		t.set_constant("v_separation", kind, 10)
+	for key in ["embedded_border", "embedded_unfocused_border"]:
+		var frame := box(PANEL, 12, 10)
+		frame.expand_margin_top = 38
+		frame.border_color = Color("aabbb6"); frame.set_border_width_all(1)
+		t.set_stylebox(key, "Window", frame)
+	t.set_color("title_color", "Window", INK)
+	t.set_color("title_outline_modulate", "Window", Color.TRANSPARENT)
+	t.set_constant("title_height", "Window", 38)
+	t.set_font_size("title_font_size", "Window", 17)
+	var close := icon('<svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><path d="M5 5l10 10M15 5L5 15" stroke="#23364a" stroke-width="2"/></svg>')
+	t.set_icon("close", "Window", close); t.set_icon("close_pressed", "Window", close)
+	t.set_color("folder_icon_color", "FileDialog", Color("527e90"))
+	t.set_color("file_icon_color", "FileDialog", INK)
+	t.set_color("file_disabled_color", "FileDialog", MUTED)
 	return t
+static func configure_file_dialog(dialog: FileDialog, title: String) -> void:
+	dialog.theme = theme()
+	dialog.title = title
+	dialog.display_mode = FileDialog.DISPLAY_LIST
+	dialog.get_ok_button().text = "选择"
+	dialog.get_cancel_button().text = "取消"
+	dialog.min_size = Vector2i(720, 460)
 static func label(text: String, size := 16) -> Label:
 	var node := Label.new(); node.text=text;node.add_theme_font_size_override("font_size",size);return node
 static func button(text: String, callback: Callable) -> Button:

@@ -33,7 +33,7 @@ func run() -> void:
 	app.pending_result={"ok":true,"data":loaded.data,"replay_path":path,"demo_hash":"ui-test"}
 	await app._commit_scene()
 	app.viewer.controller.clock.seek(500)
-	check(app.viewer.get_node("WorldEnvironment").environment.background_color==Color("b7c4cb"),"Saved scene background applied")
+	check(app.viewer.get_node("WorldEnvironment").environment.background_color==preload("res://scripts/config/ScenePalette.gd").preset(1).background,"Saved scene background applied")
 	app.settings.set_value("background_tone",0)
 	for dimensions in [Vector2i(1280,800),Vector2i(960,640),Vector2i(1440,900)]:
 		root.size=dimensions
@@ -49,9 +49,9 @@ func run() -> void:
 	app.show_settings()
 	check(not app.viewer.controller.clock.is_playing,"Settings pauses playback")
 	app.settings.set_value("background_tone",2)
-	check(app.viewer.get_node("WorldEnvironment").environment.background_color==Color("394750"),"Background change applies immediately")
+	check(app.viewer.get_node("WorldEnvironment").environment.background_color==preload("res://scripts/config/ScenePalette.gd").preset(2).background,"Background change applies immediately")
 	app.settings.reset_defaults()
-	check(app.viewer.get_node("WorldEnvironment").environment.background_color==Color("c4c7c2"),"Reset restores light background")
+	check(app.viewer.get_node("WorldEnvironment").environment.background_color==preload("res://scripts/config/ScenePalette.gd").preset(0).background,"Reset restores light background")
 	app.go_home()
 	check(app.viewer==null and app.state==app.AppState.HOME,"Home releases replay session")
 	var file:=FileAccess.open(output+"ui-report.json",FileAccess.WRITE)

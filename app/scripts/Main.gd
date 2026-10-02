@@ -43,6 +43,9 @@ func _ready() -> void:
 	combat_panel = preload("res://scripts/ui/CombatPanel.gd").new()
 	$UI.add_child(combat_panel)
 	combat_panel.setup(view_controls, combat)
+	timeline.footer_panel.resized.connect(_fit_replay_panels)
+	get_viewport().size_changed.connect(_fit_replay_panels)
+	_fit_replay_panels.call_deferred()
 	combat_panel.inspect_player_requested.connect(func(id):debug_overlay.show();debug_overlay.select_player(id))
 	debug_overlay.combat = combat
 	kill_markers = preload("res://scripts/ui/KillMarkers.gd").new()
@@ -66,6 +69,7 @@ func _ready() -> void:
 	file_dialog.filters = PackedStringArray(["*.json,*.replay ; Replay JSON or binary"])
 	file_dialog.file_selected.connect(request_replay)
 	$UI.add_child(file_dialog)
+	preload("res://scripts/application/ShellStyle.gd").configure_file_dialog(file_dialog,"选择回放文件")
 	if not has_meta("shell_session"): get_window().files_dropped.connect(_files_dropped)
 	var path := "res://data/mock_replay.json"
 	var args := OS.get_cmdline_user_args()
@@ -174,3 +178,7 @@ func reload_map() -> void:
 	controller.set_map_transform(map_manager.map_transform)
 	$TacticalCamera.clearance_height=map_manager.map_bounds.end.y+1.0
 	view_controls.apply_mode();combat.refresh(controller.clock.current_time)
+
+func _fit_replay_panels() -> void:
+	if is_instance_valid(combat_panel):
+		combat_panel.offset_bottom = -maxf(182, timeline.footer_panel.size.y + 16)

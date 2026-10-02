@@ -29,7 +29,9 @@ func configure(player: Dictionary) -> void:
 	font.font_names = PackedStringArray(["Segoe UI", "Microsoft YaHei UI"])
 	$Name.font = font
 	$Name.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-	$Name.outline_size = 4
+	$Name.outline_size = 8
+	$Name.outline_modulate = Color("17232d")
+	_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	$Name.render_priority = 20
 	$Name.outline_render_priority = 19
 	_xray = MeshInstance3D.new()
@@ -77,7 +79,7 @@ func _update_appearance(team: String, alive: bool) -> void:
 func set_view_mode(mode: int) -> void:
 	_view_mode = mode
 	_xray.visible = mode != 0
-	_xray_material.albedo_color.a = (0.5 if mode == 2 else 0.3) if _alive else 0.08
+	_xray_material.albedo_color.a = (0.85 if mode == 2 else 0.7) if _alive else 0.08
 	$Name.no_depth_test = mode != 0
 
 func _process(_delta: float) -> void:

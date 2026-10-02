@@ -1,7 +1,7 @@
 extends RefCounted
 signal changed
 const Info = preload("res://scripts/application/AppInfo.gd")
-const DEFAULTS := {"background_tone":0, "cs2_path":"", "auto_prepare_maps":1, "name_size":14.0, "player_scale":1.0, "smoke_visibility":1, "map_opacity":1.0, "t_color":"ffb454", "ct_color":"66b9ff", "pan_speed":1.0, "zoom_speed":1.0, "orbit_sensitivity":1.0, "players":true, "names":true, "player_status":true, "smoke":true, "fire":true, "grenades":true, "trajectories":true, "shots":true, "kill_feed":true, "bomb":true}
+const DEFAULTS := {"background_tone":0, "cs2_path":"", "auto_prepare_maps":1, "name_size":14.0, "player_scale":1.0, "smoke_visibility":1, "map_opacity":1.0, "t_color":"ffb454", "ct_color":"66b9ff", "pan_speed":1.0, "zoom_speed":1.0, "orbit_sensitivity":1.0, "players":true, "names":true, "dead_names":false, "player_status":true, "smoke":true, "fire":true, "grenades":true, "trajectories":true, "shots":true, "kill_feed":true, "bomb":true}
 var values := DEFAULTS.duplicate(true)
 var error := ""
 var path := Info.data_root().path_join("settings.json")

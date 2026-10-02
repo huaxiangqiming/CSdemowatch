@@ -28,7 +28,8 @@ var orbit_sensitivity := 1.0
 
 func configure_bounds(bounds: AABB, is_mock: bool) -> void:
 	_home_target = Vector3.ZERO if is_mock else bounds.get_center()
-	_home_size = DEFAULT_SIZE if is_mock else maxf(DEFAULT_SIZE, maxf(bounds.size.x, bounds.size.z) * 1.9)
+	# Closer initial framing: about 41% larger than the previous 1.9 padding.
+	_home_size = DEFAULT_SIZE if is_mock else maxf(DEFAULT_SIZE, maxf(bounds.size.x, bounds.size.z) * 1.35)
 	_max_size = MAX_SIZE if is_mock else maxf(MAX_SIZE, _home_size * 2.0)
 	_pan_extent = 24.0 if is_mock else maxf(bounds.size.x, bounds.size.z)
 	_ground = Plane(Vector3.UP, 0 if is_mock else bounds.position.y - 0.05)

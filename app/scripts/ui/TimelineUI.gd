@@ -22,6 +22,7 @@ var forward_15_button: Button
 var round_label: Label
 var round_navigation = preload("res://scripts/core/RoundNavigation.gd").new()
 var _enabled := false
+var footer_panel: PanelContainer
 
 
 
@@ -173,16 +174,20 @@ func _build_ui() -> void:
 	var header_row := HBoxContainer.new()
 	header.add_child(header_row)
 	var heading := VBoxContainer.new()
+	heading.custom_minimum_size.x = 0
 	heading.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	header_row.add_child(heading)
 	var title := _label("TACTICAL REPLAY", 24)
 	heading.add_child(title)
 	subtitle = _label("Loading replay...", 14, Color("52677c"))
+	subtitle.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	heading.add_child(subtitle)
 	var badge := _label("LOCAL • OFFLINE", 14, Color("087e8b"))
 	header_row.add_child(badge)
 
 	var footer := PanelContainer.new()
+	footer_panel = footer
+	footer.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	add_child(footer)
 	footer.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
 	footer.offset_top = -166
@@ -190,9 +195,13 @@ func _build_ui() -> void:
 	var rows := VBoxContainer.new()
 	rows.add_theme_constant_override("separation", 8)
 	footer.add_child(rows)
+	var flow := HFlowContainer.new()
+	flow.add_theme_constant_override("h_separation", 16)
+	flow.add_theme_constant_override("v_separation", 4)
+	rows.add_child(flow)
 	var controls := HBoxContainer.new()
 	controls.add_theme_constant_override("separation", 6)
-	rows.add_child(controls)
+	flow.add_child(controls)
 	rewind_button = _button("Restart", controls)
 	rewind_button.pressed.connect(func(): clock.seek(0.0))
 	play_button = _button("Play", controls)
@@ -215,17 +224,18 @@ func _build_ui() -> void:
 	forward_15_button = _button("+15 秒", skips)
 	forward_15_button.tooltip_text = "快进 15 秒；到回放末尾自动暂停"
 	forward_15_button.pressed.connect(func(): skip_seconds(15))
-	var gap := Control.new()
-	gap.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	controls.add_child(gap)
+	var details := HBoxContainer.new()
+	details.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	details.alignment = BoxContainer.ALIGNMENT_END
+	flow.add_child(details)
 	status_label = _label("LOADING", 12, Color("087e8b"))
-	controls.add_child(status_label)
+	details.add_child(status_label)
 	time_label = _label("00:00.000  /  00:20.000", 17)
 	time_label.custom_minimum_size.x = 210
 	time_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	controls.add_child(time_label)
+	details.add_child(time_label)
 	for speed in [0.5, 1.0, 2.0]:
-		var button := _button(str(speed).trim_suffix(".0") + "x", controls)
+		var button := _button(str(speed).trim_suffix(".0") + "x", details)
 		button.toggle_mode = true
 		button.custom_minimum_size.x = 58
 		button.pressed.connect(func(): clock.set_speed(speed))
